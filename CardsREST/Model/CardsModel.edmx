@@ -1,0 +1,572 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CardsContext.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Accounts">
+          <Key>
+            <PropertyRef Name="accountID" />
+          </Key>
+          <Property Name="accountID" Type="int" Nullable="false" />
+          <Property Name="accountNumber" Type="varchar" MaxLength="25" />
+          <Property Name="accountType" Type="int" />
+          <Property Name="saldo" Type="numeric" Precision="15" Scale="2" />
+          <Property Name="cardID" Type="int" />
+          <Property Name="status" Type="int" />
+          <Property Name="RM" Type="int" />
+          <Property Name="puntos" Type="int" />
+          <Property Name="upd_accounts" Type="datetime" />
+        </EntityType>
+        <EntityType Name="AccountsType">
+          <Key>
+            <PropertyRef Name="accountType" />
+          </Key>
+          <Property Name="accountType" Type="int" Nullable="false" />
+          <Property Name="nname" Type="varchar" MaxLength="20" />
+          <Property Name="aactive" Type="int" />
+        </EntityType>
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Name="BatchID" Type="int" Nullable="false" />
+          <Property Name="BatchNum" Type="int" />
+          <Property Name="InvoiceNum" Type="int" />
+          <Property Name="AccountType" Type="int" />
+          <Property Name="BatchUpload" Type="int" />
+          <Property Name="TransCode" Type="int" />
+          <Property Name="Reversada" Type="int" />
+          <Property Name="Anulada" Type="int" />
+          <Property Name="transyear" Type="int" />
+          <Property Name="transmonth" Type="int" />
+          <Property Name="transday" Type="int" />
+          <Property Name="transDate" Type="varchar" MaxLength="8" />
+          <Property Name="IsoDescription" Type="varchar" MaxLength="75" />
+          <Property Name="Settlement" Type="int" />
+          <Property Name="sourceaccount" Type="varchar" MaxLength="21" />
+          <Property Name="b002" Type="varchar" MaxLength="21" />
+          <Property Name="b003" Type="varchar" MaxLength="6" />
+          <Property Name="b004" Type="numeric" Precision="14" Scale="2" />
+          <Property Name="b011" Type="int" />
+          <Property Name="b012" Type="varchar" MaxLength="6" />
+          <Property Name="b013" Type="varchar" MaxLength="8" />
+          <Property Name="b014" Type="varchar" MaxLength="4" />
+          <Property Name="b032" Type="varchar" MaxLength="11" />
+          <Property Name="b035" Type="varchar" MaxLength="37" />
+          <Property Name="b037" Type="int" />
+          <Property Name="b038" Type="varchar" MaxLength="6" />
+          <Property Name="b039" Type="varchar" MaxLength="2" />
+          <Property Name="b041" Type="varchar" MaxLength="16" />
+          <Property Name="b042" Type="varchar" MaxLength="15" />
+          <Property Name="fileid" Type="int" />
+          <Property Name="statusFile" Type="int" />
+          <Property Name="MsgType" Type="int" />
+          <Property Name="BinPan" Type="varchar" MaxLength="6" />
+          <Property Name="liquidado" Type="int" />
+          <Property Name="batchdate" Type="datetime" />
+          <Property Name="liquidadodate" Type="datetime" />
+          <Property Name="puntos" Type="int" />
+          <Property Name="factor_acred" Type="numeric" Precision="5" Scale="2" />
+          <Property Name="factor_canje" Type="numeric" Precision="5" Scale="2" />
+        </EntityType>
+        <EntityType Name="Cards">
+          <Key>
+            <PropertyRef Name="cardID" />
+          </Key>
+          <Property Name="cardID" Type="int" Nullable="false" />
+          <Property Name="PAN" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="pluginID" Type="int" />
+          <Property Name="merchantID" Type="int" />
+          <Property Name="clientID" Type="int" />
+          <Property Name="brandID" Type="int" />
+          <Property Name="expdateCard" Type="varchar" MaxLength="4" />
+          <Property Name="cvv2Card" Type="varchar" MaxLength="3" />
+          <Property Name="status" Type="int" />
+          <Property Name="offset" Type="varchar" MaxLength="12" />
+          <Property Name="lastOffset" Type="varchar" MaxLength="12" />
+          <Property Name="printed" Type="varchar" MaxLength="8" />
+          <Property Name="batchprinted" Type="int" />
+          <Property Name="carddate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Clients">
+          <Key>
+            <PropertyRef Name="clientID" />
+          </Key>
+          <Property Name="clientID" Type="int" Nullable="false" />
+          <Property Name="nameClient" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CIDClient" Type="varchar" MaxLength="15" />
+          <Property Name="addressClient" Type="varchar" MaxLength="100" />
+          <Property Name="phoneClient" Type="varchar" MaxLength="30" />
+          <Property Name="statusClient" Type="int" />
+          <Property Name="fileid" Type="int" />
+          <Property Name="password" Type="varchar" MaxLength="100" />
+          <Property Name="enabled" Type="int" />
+          <Property Name="pwd_expired" Type="int" />
+          <Property Name="reminder_id" Type="int" />
+          <Property Name="reminder_answer" Type="varchar" MaxLength="150" />
+          <Property Name="clientdate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Transactions">
+          <Key>
+            <PropertyRef Name="TransCode" />
+          </Key>
+          <Property Name="TransCode" Type="int" Nullable="false" />
+          <Property Name="NName" Type="varchar" MaxLength="40" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
+          <Property Name="AActive" Type="int" />
+        </EntityType>
+        <Association Name="FK_Accounts_AccType">
+          <End Role="AccountsType" Type="Self.AccountsType" Multiplicity="0..1" />
+          <End Role="Accounts" Type="Self.Accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsType">
+              <PropertyRef Name="accountType" />
+            </Principal>
+            <Dependent Role="Accounts">
+              <PropertyRef Name="accountType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Accounts_Cards">
+          <End Role="Cards" Type="Self.Cards" Multiplicity="0..1" />
+          <End Role="Accounts" Type="Self.Accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cards">
+              <PropertyRef Name="cardID" />
+            </Principal>
+            <Dependent Role="Accounts">
+              <PropertyRef Name="cardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cards_Clients">
+          <End Role="Clients" Type="Self.Clients" Multiplicity="0..1" />
+          <End Role="Cards" Type="Self.Cards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="clientID" />
+            </Principal>
+            <Dependent Role="Cards">
+              <PropertyRef Name="clientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="PLZ_ADD_BATCH" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUMDOC" Type="nvarchar" Mode="In" />
+          <Parameter Name="MONTO" Type="nvarchar" Mode="In" />
+          <Parameter Name="TRANSCODE" Type="int" Mode="In" />
+          <Parameter Name="FACTORACRED" Type="numeric" Mode="In" />
+          <Parameter Name="FACTORCANJE" Type="numeric" Mode="In" />
+          <Parameter Name="SUMAUSUARIO" Type="nvarchar" Mode="In" />
+          <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="PLZ_ADD_CARD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUMDOC" Type="varchar" Mode="In" />
+          <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="PLZ_ADD_CLIENTE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUMDOC" Type="nvarchar" Mode="In" />
+          <Parameter Name="NAMECLIENT" Type="nvarchar" Mode="In" />
+          <Parameter Name="PHONECLIENT" Type="nvarchar" Mode="In" />
+          <Parameter Name="ADDRESSCLIENT" Type="nvarchar" Mode="In" />
+          <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="PLZ_TRANSACCION_PUNTOS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUMDOC" Type="nvarchar" Mode="In" />
+          <Parameter Name="PUNTOS" Type="int" Mode="In" />
+          <Parameter Name="TRANSCODE" Type="int" Mode="In" />
+          <Parameter Name="FACTORACRED" Type="numeric" Mode="In" />
+          <Parameter Name="FACTORCANJE" Type="numeric" Mode="In" />
+          <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="PLZ_UPD_CARD_STATUS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUMDOC" Type="varchar" Mode="In" />
+          <Parameter Name="NUEVOESTATUS" Type="int" Mode="In" />
+          <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="CardsContextStoreContainer">
+          <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountsType" EntityType="Self.AccountsType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cards" EntityType="Self.Cards" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Accounts_AccType" Association="Self.FK_Accounts_AccType">
+            <End Role="AccountsType" EntitySet="AccountsType" />
+            <End Role="Accounts" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Accounts_Cards" Association="Self.FK_Accounts_Cards">
+            <End Role="Cards" EntitySet="Cards" />
+            <End Role="Accounts" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cards_Clients" Association="Self.FK_Cards_Clients">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="Cards" EntitySet="Cards" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CardsContext" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="accountID" />
+          </Key>
+          <Property Name="accountID" Type="Int32" Nullable="false" />
+          <Property Name="accountNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="accountType" Type="Int32" />
+          <Property Name="saldo" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="cardID" Type="Int32" />
+          <Property Name="status" Type="Int32" />
+          <Property Name="RM" Type="Int32" />
+          <Property Name="puntos" Type="Int32" />
+          <Property Name="upd_accounts" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="AccountsType" Relationship="Self.FK_Accounts_AccType" FromRole="Accounts" ToRole="AccountsType" />
+          <NavigationProperty Name="Card" Relationship="Self.FK_Accounts_Cards" FromRole="Accounts" ToRole="Cards" />
+        </EntityType>
+        <EntityType Name="AccountsType">
+          <Key>
+            <PropertyRef Name="accountType" />
+          </Key>
+          <Property Name="accountType" Type="Int32" Nullable="false" />
+          <Property Name="nname" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="aactive" Type="Int32" />
+          <NavigationProperty Name="Accounts" Relationship="Self.FK_Accounts_AccType" FromRole="AccountsType" ToRole="Accounts" />
+        </EntityType>
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Name="BatchID" Type="Int32" Nullable="false" />
+          <Property Name="BatchNum" Type="Int32" />
+          <Property Name="InvoiceNum" Type="Int32" />
+          <Property Name="AccountType" Type="Int32" />
+          <Property Name="BatchUpload" Type="Int32" />
+          <Property Name="TransCode" Type="Int32" />
+          <Property Name="Reversada" Type="Int32" />
+          <Property Name="Anulada" Type="Int32" />
+          <Property Name="transyear" Type="Int32" />
+          <Property Name="transmonth" Type="Int32" />
+          <Property Name="transday" Type="Int32" />
+          <Property Name="transDate" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="IsoDescription" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="Settlement" Type="Int32" />
+          <Property Name="sourceaccount" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="b002" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="b003" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="b004" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="b011" Type="Int32" />
+          <Property Name="b012" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="b013" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="b014" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="b032" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="b035" Type="String" MaxLength="37" FixedLength="false" Unicode="false" />
+          <Property Name="b037" Type="Int32" />
+          <Property Name="b038" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="b039" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="b041" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="b042" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="fileid" Type="Int32" />
+          <Property Name="statusFile" Type="Int32" />
+          <Property Name="MsgType" Type="Int32" />
+          <Property Name="BinPan" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="liquidado" Type="Int32" />
+          <Property Name="batchdate" Type="DateTime" Precision="3" />
+          <Property Name="liquidadodate" Type="DateTime" Precision="3" />
+          <Property Name="puntos" Type="Int32" />
+          <Property Name="factor_acred" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="factor_canje" Type="Decimal" Precision="5" Scale="2" />
+        </EntityType>
+        <EntityType Name="Card">
+          <Key>
+            <PropertyRef Name="cardID" />
+          </Key>
+          <Property Name="cardID" Type="Int32" Nullable="false" />
+          <Property Name="PAN" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="pluginID" Type="Int32" />
+          <Property Name="merchantID" Type="Int32" />
+          <Property Name="clientID" Type="Int32" />
+          <Property Name="brandID" Type="Int32" />
+          <Property Name="expdateCard" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="cvv2Card" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="Int32" />
+          <Property Name="offset" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="lastOffset" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="printed" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="batchprinted" Type="Int32" />
+          <Property Name="carddate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Accounts" Relationship="Self.FK_Accounts_Cards" FromRole="Cards" ToRole="Accounts" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Cards_Clients" FromRole="Cards" ToRole="Clients" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="clientID" />
+          </Key>
+          <Property Name="clientID" Type="Int32" Nullable="false" />
+          <Property Name="nameClient" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CIDClient" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="addressClient" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="phoneClient" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="statusClient" Type="Int32" />
+          <Property Name="fileid" Type="Int32" />
+          <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="enabled" Type="Int32" />
+          <Property Name="pwd_expired" Type="Int32" />
+          <Property Name="reminder_id" Type="Int32" />
+          <Property Name="reminder_answer" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="clientdate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Cards" Relationship="Self.FK_Cards_Clients" FromRole="Clients" ToRole="Cards" />
+        </EntityType>
+        <Association Name="FK_Accounts_AccType">
+          <End Role="AccountsType" Type="Self.AccountsType" Multiplicity="0..1" />
+          <End Role="Accounts" Type="Self.Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsType">
+              <PropertyRef Name="accountType" />
+            </Principal>
+            <Dependent Role="Accounts">
+              <PropertyRef Name="accountType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Accounts_Cards">
+          <End Role="Cards" Type="Self.Card" Multiplicity="0..1" />
+          <End Role="Accounts" Type="Self.Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cards">
+              <PropertyRef Name="cardID" />
+            </Principal>
+            <Dependent Role="Accounts">
+              <PropertyRef Name="cardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Cards_Clients">
+          <End Role="Clients" Type="Self.Client" Multiplicity="0..1" />
+          <End Role="Cards" Type="Self.Card" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="clientID" />
+            </Principal>
+            <Dependent Role="Cards">
+              <PropertyRef Name="clientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CardsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accounts" EntityType="Self.Account" />
+          <EntitySet Name="AccountsTypes" EntityType="Self.AccountsType" />
+          <EntitySet Name="Batches" EntityType="Self.Batch" />
+          <EntitySet Name="Cards" EntityType="Self.Card" />
+          <EntitySet Name="Clients" EntityType="Self.Client" />
+          <AssociationSet Name="FK_Accounts_AccType" Association="Self.FK_Accounts_AccType">
+            <End Role="AccountsType" EntitySet="AccountsTypes" />
+            <End Role="Accounts" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Accounts_Cards" Association="Self.FK_Accounts_Cards">
+            <End Role="Cards" EntitySet="Cards" />
+            <End Role="Accounts" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Cards_Clients" Association="Self.FK_Cards_Clients">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="Cards" EntitySet="Cards" />
+          </AssociationSet>
+          <FunctionImport Name="PLZ_ADD_CLIENTE">
+            <Parameter Name="NUMDOC" Mode="In" Type="String" />
+            <Parameter Name="NAMECLIENT" Mode="In" Type="String" />
+            <Parameter Name="PHONECLIENT" Mode="In" Type="String" />
+            <Parameter Name="ADDRESSCLIENT" Mode="In" Type="String" />
+            <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PLZ_TRANSACCION_PUNTOS">
+            <Parameter Name="NUMDOC" Mode="In" Type="String" />
+            <Parameter Name="PUNTOS" Mode="In" Type="Int32" />
+            <Parameter Name="TRANSCODE" Mode="In" Type="Int32" />
+            <Parameter Name="FACTORACRED" Mode="In" Type="Decimal" />
+            <Parameter Name="FACTORCANJE" Mode="In" Type="Decimal" />
+            <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PLZ_UPD_CARD_STATUS">
+            <Parameter Name="NUMDOC" Mode="In" Type="String" />
+            <Parameter Name="NUEVOESTATUS" Mode="In" Type="Int32" />
+            <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Transactions" EntityType="CardsContext.Transaction" />
+          <FunctionImport Name="PLZ_ADD_CARD">
+            <Parameter Name="NUMDOC" Mode="In" Type="String" />
+            <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PLZ_ADD_BATCH">
+            <Parameter Name="NUMDOC" Mode="In" Type="String" />
+            <Parameter Name="MONTO" Mode="In" Type="String" />
+            <Parameter Name="TRANSCODE" Mode="In" Type="Int32" />
+            <Parameter Name="FACTORACRED" Mode="In" Type="Decimal" />
+            <Parameter Name="FACTORCANJE" Mode="In" Type="Decimal" />
+            <Parameter Name="SUMAUSUARIO" Mode="In" Type="String" />
+            <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="TransCode" />
+          </Key>
+          <Property Name="TransCode" Type="Int32" Nullable="false" />
+          <Property Name="NName" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AActive" Type="Int32" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CardsContextStoreContainer" CdmEntityContainer="CardsEntities">
+          <EntitySetMapping Name="Accounts">
+            <EntityTypeMapping TypeName="CardsContext.Account">
+              <MappingFragment StoreEntitySet="Accounts">
+                <ScalarProperty Name="accountID" ColumnName="accountID" />
+                <ScalarProperty Name="accountNumber" ColumnName="accountNumber" />
+                <ScalarProperty Name="accountType" ColumnName="accountType" />
+                <ScalarProperty Name="saldo" ColumnName="saldo" />
+                <ScalarProperty Name="cardID" ColumnName="cardID" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="RM" ColumnName="RM" />
+                <ScalarProperty Name="puntos" ColumnName="puntos" />
+                <ScalarProperty Name="upd_accounts" ColumnName="upd_accounts" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountsTypes">
+            <EntityTypeMapping TypeName="CardsContext.AccountsType">
+              <MappingFragment StoreEntitySet="AccountsType">
+                <ScalarProperty Name="accountType" ColumnName="accountType" />
+                <ScalarProperty Name="nname" ColumnName="nname" />
+                <ScalarProperty Name="aactive" ColumnName="aactive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Batches">
+            <EntityTypeMapping TypeName="CardsContext.Batch">
+              <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="BatchNum" ColumnName="BatchNum" />
+                <ScalarProperty Name="InvoiceNum" ColumnName="InvoiceNum" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+                <ScalarProperty Name="BatchUpload" ColumnName="BatchUpload" />
+                <ScalarProperty Name="TransCode" ColumnName="TransCode" />
+                <ScalarProperty Name="Reversada" ColumnName="Reversada" />
+                <ScalarProperty Name="Anulada" ColumnName="Anulada" />
+                <ScalarProperty Name="transyear" ColumnName="transyear" />
+                <ScalarProperty Name="transmonth" ColumnName="transmonth" />
+                <ScalarProperty Name="transday" ColumnName="transday" />
+                <ScalarProperty Name="transDate" ColumnName="transDate" />
+                <ScalarProperty Name="IsoDescription" ColumnName="IsoDescription" />
+                <ScalarProperty Name="Settlement" ColumnName="Settlement" />
+                <ScalarProperty Name="sourceaccount" ColumnName="sourceaccount" />
+                <ScalarProperty Name="b002" ColumnName="b002" />
+                <ScalarProperty Name="b003" ColumnName="b003" />
+                <ScalarProperty Name="b004" ColumnName="b004" />
+                <ScalarProperty Name="b011" ColumnName="b011" />
+                <ScalarProperty Name="b012" ColumnName="b012" />
+                <ScalarProperty Name="b013" ColumnName="b013" />
+                <ScalarProperty Name="b014" ColumnName="b014" />
+                <ScalarProperty Name="b032" ColumnName="b032" />
+                <ScalarProperty Name="b035" ColumnName="b035" />
+                <ScalarProperty Name="b037" ColumnName="b037" />
+                <ScalarProperty Name="b038" ColumnName="b038" />
+                <ScalarProperty Name="b039" ColumnName="b039" />
+                <ScalarProperty Name="b041" ColumnName="b041" />
+                <ScalarProperty Name="b042" ColumnName="b042" />
+                <ScalarProperty Name="fileid" ColumnName="fileid" />
+                <ScalarProperty Name="statusFile" ColumnName="statusFile" />
+                <ScalarProperty Name="MsgType" ColumnName="MsgType" />
+                <ScalarProperty Name="BinPan" ColumnName="BinPan" />
+                <ScalarProperty Name="liquidado" ColumnName="liquidado" />
+                <ScalarProperty Name="batchdate" ColumnName="batchdate" />
+                <ScalarProperty Name="liquidadodate" ColumnName="liquidadodate" />
+                <ScalarProperty Name="puntos" ColumnName="puntos" />
+                <ScalarProperty Name="factor_acred" ColumnName="factor_acred" />
+                <ScalarProperty Name="factor_canje" ColumnName="factor_canje" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cards">
+            <EntityTypeMapping TypeName="CardsContext.Card">
+              <MappingFragment StoreEntitySet="Cards">
+                <ScalarProperty Name="cardID" ColumnName="cardID" />
+                <ScalarProperty Name="PAN" ColumnName="PAN" />
+                <ScalarProperty Name="pluginID" ColumnName="pluginID" />
+                <ScalarProperty Name="merchantID" ColumnName="merchantID" />
+                <ScalarProperty Name="clientID" ColumnName="clientID" />
+                <ScalarProperty Name="brandID" ColumnName="brandID" />
+                <ScalarProperty Name="expdateCard" ColumnName="expdateCard" />
+                <ScalarProperty Name="cvv2Card" ColumnName="cvv2Card" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="offset" ColumnName="offset" />
+                <ScalarProperty Name="lastOffset" ColumnName="lastOffset" />
+                <ScalarProperty Name="printed" ColumnName="printed" />
+                <ScalarProperty Name="batchprinted" ColumnName="batchprinted" />
+                <ScalarProperty Name="carddate" ColumnName="carddate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="CardsContext.Client">
+              <MappingFragment StoreEntitySet="Clients">
+                <ScalarProperty Name="clientID" ColumnName="clientID" />
+                <ScalarProperty Name="nameClient" ColumnName="nameClient" />
+                <ScalarProperty Name="CIDClient" ColumnName="CIDClient" />
+                <ScalarProperty Name="addressClient" ColumnName="addressClient" />
+                <ScalarProperty Name="phoneClient" ColumnName="phoneClient" />
+                <ScalarProperty Name="statusClient" ColumnName="statusClient" />
+                <ScalarProperty Name="fileid" ColumnName="fileid" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="enabled" ColumnName="enabled" />
+                <ScalarProperty Name="pwd_expired" ColumnName="pwd_expired" />
+                <ScalarProperty Name="reminder_id" ColumnName="reminder_id" />
+                <ScalarProperty Name="reminder_answer" ColumnName="reminder_answer" />
+                <ScalarProperty Name="clientdate" ColumnName="clientdate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="PLZ_ADD_CLIENTE" FunctionName="CardsContext.Store.PLZ_ADD_CLIENTE" />
+          <FunctionImportMapping FunctionImportName="PLZ_TRANSACCION_PUNTOS" FunctionName="CardsContext.Store.PLZ_TRANSACCION_PUNTOS" />
+          <FunctionImportMapping FunctionImportName="PLZ_UPD_CARD_STATUS" FunctionName="CardsContext.Store.PLZ_UPD_CARD_STATUS" />
+          <EntitySetMapping Name="Transactions">
+            <EntityTypeMapping TypeName="CardsContext.Transaction">
+              <MappingFragment StoreEntitySet="Transactions">
+                <ScalarProperty Name="AActive" ColumnName="AActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="NName" ColumnName="NName" />
+                <ScalarProperty Name="TransCode" ColumnName="TransCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="PLZ_ADD_CARD" FunctionName="CardsContext.Store.PLZ_ADD_CARD" />
+          <FunctionImportMapping FunctionImportName="PLZ_ADD_BATCH" FunctionName="CardsContext.Store.PLZ_ADD_BATCH" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
