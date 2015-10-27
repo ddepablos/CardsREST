@@ -33,9 +33,16 @@ namespace CardsREST
             return new Record() { id = "1", value = "Falso" };
         }
 
-        public Record GetVersion()
+        public List<Record> GetVersion()
         {
-            return new Record() { id = "1.0.2", value = "2015-09-23 - FIX GetReport" };
+
+            List<Record> version = new List<Record>();
+
+            version.Add(new Record() { id = "1.0.3", value = "2015-10-27 - FIX GetBatch : El valor del campo PUNTOS para transacciones de tipo de cuenta Lealtad." });
+            version.Add(new Record(){id = "1.0.2", value = "2015-09-23 - FIX GetReport" });
+
+            return version;
+            
         }
 
         public Record GetEcho(string numero)
@@ -368,7 +375,7 @@ namespace CardsREST
                                  transcode = b.TransCode.ToString(),
                                  transname = tc.NName,
                                  saldo = b.b004.ToString(),
-                                 puntos = (b.b004).ToString().Replace(".00", ""),
+                                 puntos = b.puntos.ToString(),          //.Replace(".00", ""),
                                  isodescription = b.IsoDescription
                              });
 
@@ -403,8 +410,8 @@ namespace CardsREST
                                  pan = b.b002,
                                  transcode = b.TransCode.ToString(),
                                  transname = tc.NName,
-                                 saldo = b.b004.ToString(),
-                                 puntos = (b.b004).ToString().Replace(".00", ""),
+                                 saldo = (b.b004).ToString().Replace(".00", ""),    //b.b004.ToString(),
+                                 puntos = b.puntos.ToString(),
                                  isodescription = b.IsoDescription
                              });
 

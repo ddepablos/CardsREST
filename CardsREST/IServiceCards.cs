@@ -26,7 +26,7 @@ namespace CardsREST
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "/getversion")]
-        Record GetVersion();
+        List<Record> GetVersion();
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "/getecho/{numero}")]
