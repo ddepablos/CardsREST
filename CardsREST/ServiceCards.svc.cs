@@ -38,6 +38,7 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
+            version.Add(new Record() { id = "1.0.5", value = "2015-10-28 - FIX Actualización del Modelo y Stored Procedures." });
             version.Add(new Record() { id = "1.0.4", value = "2015-10-27 - New card/active, card/inactive, card/changestatus : Validar y retornar mensaje de excepción cuando el cliente no existe." });
             version.Add(new Record() { id = "1.0.3", value = "2015-10-27 - FIX GetBatch : El valor del campo PUNTOS para transacciones de tipo de cuenta Lealtad." });
             version.Add(new Record(){id = "1.0.2", value = "2015-09-23 - New GetReport" });
@@ -112,7 +113,7 @@ namespace CardsREST
 
                 if (numdoc != null && monto != null && transcode != null && (factoracred != null || factorcanje != null))
                 {
-                    context.PLZ_ADD_BATCH(numdoc, monto, int.Parse(transcode), decimal.Parse(factoracred), decimal.Parse(factorcanje), sumausuario, respuesta);
+                    context.PLZ_ADD_BATCH1(numdoc, monto, int.Parse(transcode), decimal.Parse(factoracred), decimal.Parse(factorcanje), sumausuario, respuesta);
                     resCode = respuesta.Value.ToString();
                 }
 
@@ -495,7 +496,7 @@ namespace CardsREST
                     resCode = respuesta.Value.ToString();
                 }
 
-                resDetail = getExcepcionDetail(resCode);
+                //resDetail = getExcepcionDetail(resCode);
 
                 return new Response() { excode = resCode, exdetail = resDetail, exsource = resSource };
 

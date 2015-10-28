@@ -5,8 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="CardsContext.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Cards.dbo.Accounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Accounts">
           <Key>
             <PropertyRef Name="accountID" />
@@ -21,8 +19,6 @@ warning 6002: The table/view 'Cards.dbo.Accounts' does not have a primary key de
           <Property Name="puntos" Type="int" />
           <Property Name="upd_accounts" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Cards.dbo.AccountsType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="AccountsType">
           <Key>
             <PropertyRef Name="accountType" />
@@ -31,8 +27,6 @@ warning 6002: The table/view 'Cards.dbo.AccountsType' does not have a primary ke
           <Property Name="nname" Type="varchar" MaxLength="20" />
           <Property Name="aactive" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Cards.dbo.Batch' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Batch">
           <Key>
             <PropertyRef Name="BatchID" />
@@ -52,7 +46,7 @@ warning 6002: The table/view 'Cards.dbo.Batch' does not have a primary key defin
           <Property Name="IsoDescription" Type="varchar" MaxLength="75" />
           <Property Name="Settlement" Type="int" />
           <Property Name="sourceaccount" Type="varchar" MaxLength="21" />
-          <Property Name="b002" Type="varchar" MaxLength="21" />
+          <Property Name="b002" Type="varchar" MaxLength="21" Nullable="false" />
           <Property Name="b003" Type="varchar" MaxLength="6" />
           <Property Name="b004" Type="numeric" Precision="14" Scale="2" />
           <Property Name="b011" Type="int" />
@@ -71,19 +65,15 @@ warning 6002: The table/view 'Cards.dbo.Batch' does not have a primary key defin
           <Property Name="MsgType" Type="int" />
           <Property Name="BinPan" Type="varchar" MaxLength="6" />
           <Property Name="liquidado" Type="int" />
-          <Property Name="batchdate" Type="datetime" />
+          <Property Name="batchdate" Type="datetime" Nullable="false" />
           <Property Name="liquidadodate" Type="datetime" />
           <Property Name="puntos" Type="int" />
           <Property Name="factor_acred" Type="numeric" Precision="5" Scale="2" />
           <Property Name="factor_canje" Type="numeric" Precision="5" Scale="2" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Cards.dbo.Cards' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Cards">
           <Key>
             <PropertyRef Name="cardID" />
-            
-            
           </Key>
           <Property Name="cardID" Type="int" Nullable="false" />
           <Property Name="PAN" Type="varchar" MaxLength="20" Nullable="false" />
@@ -100,13 +90,9 @@ warning 6002: The table/view 'Cards.dbo.Cards' does not have a primary key defin
           <Property Name="batchprinted" Type="int" />
           <Property Name="carddate" Type="datetime" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Cards.dbo.Clients' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Clients">
           <Key>
             <PropertyRef Name="clientID" />
-            
-            
           </Key>
           <Property Name="clientID" Type="int" Nullable="false" />
           <Property Name="nameClient" Type="varchar" MaxLength="50" Nullable="false" />
@@ -122,8 +108,6 @@ warning 6002: The table/view 'Cards.dbo.Clients' does not have a primary key def
           <Property Name="reminder_answer" Type="varchar" MaxLength="150" />
           <Property Name="clientdate" Type="datetime" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Cards.dbo.Transactions' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Transactions">
           <Key>
             <PropertyRef Name="TransCode" />
@@ -133,6 +117,39 @@ warning 6002: The table/view 'Cards.dbo.Transactions' does not have a primary ke
           <Property Name="Description" Type="varchar" MaxLength="50" />
           <Property Name="AActive" Type="int" />
         </EntityType>
+        <Association Name="FK_ACCOUNTS_CARDS">
+          <End Role="Cards" Type="Self.Cards" Multiplicity="0..1" />
+          <End Role="Accounts" Type="Self.Accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cards">
+              <PropertyRef Name="cardID" />
+            </Principal>
+            <Dependent Role="Accounts">
+              <PropertyRef Name="cardID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CARDS_CLIENTS">
+          <End Role="Clients" Type="Self.Clients" Multiplicity="0..1" />
+          <End Role="Cards" Type="Self.Cards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="clientID" />
+            </Principal>
+            <Dependent Role="Cards">
+              <PropertyRef Name="clientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="PLZ_ADD_BATCH" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUMDOC" Type="nvarchar" Mode="In" />
+          <Parameter Name="MONTO" Type="nvarchar" Mode="In" />
+          <Parameter Name="TRANSCODE" Type="int" Mode="In" />
+          <Parameter Name="FACTORACRED" Type="numeric" Mode="In" />
+          <Parameter Name="FACTORCANJE" Type="numeric" Mode="In" />
+          <Parameter Name="SUMAUSARIO" Type="nvarchar" Mode="In" />
+          <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
+        </Function>
         <Function Name="PLZ_ADD_CARD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NUMDOC" Type="varchar" Mode="In" />
           <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
@@ -158,112 +175,20 @@ warning 6002: The table/view 'Cards.dbo.Transactions' does not have a primary ke
           <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
         </Function>
         <EntityContainer Name="CardsContextStoreContainer">
-          <EntitySet Name="Accounts" EntityType="Self.Accounts" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Accounts].[accountID] AS [accountID], 
-    [Accounts].[accountNumber] AS [accountNumber], 
-    [Accounts].[accountType] AS [accountType], 
-    [Accounts].[saldo] AS [saldo], 
-    [Accounts].[cardID] AS [cardID], 
-    [Accounts].[status] AS [status], 
-    [Accounts].[RM] AS [RM], 
-    [Accounts].[puntos] AS [puntos], 
-    [Accounts].[upd_accounts] AS [upd_accounts]
-    FROM [dbo].[Accounts] AS [Accounts]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="AccountsType" EntityType="Self.AccountsType" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [AccountsType].[accountType] AS [accountType], 
-    [AccountsType].[nname] AS [nname], 
-    [AccountsType].[aactive] AS [aactive]
-    FROM [dbo].[AccountsType] AS [AccountsType]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Batch" EntityType="Self.Batch" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Batch].[BatchID] AS [BatchID], 
-    [Batch].[BatchNum] AS [BatchNum], 
-    [Batch].[InvoiceNum] AS [InvoiceNum], 
-    [Batch].[AccountType] AS [AccountType], 
-    [Batch].[BatchUpload] AS [BatchUpload], 
-    [Batch].[TransCode] AS [TransCode], 
-    [Batch].[Reversada] AS [Reversada], 
-    [Batch].[Anulada] AS [Anulada], 
-    [Batch].[transyear] AS [transyear], 
-    [Batch].[transmonth] AS [transmonth], 
-    [Batch].[transday] AS [transday], 
-    [Batch].[transDate] AS [transDate], 
-    [Batch].[IsoDescription] AS [IsoDescription], 
-    [Batch].[Settlement] AS [Settlement], 
-    [Batch].[sourceaccount] AS [sourceaccount], 
-    [Batch].[b002] AS [b002], 
-    [Batch].[b003] AS [b003], 
-    [Batch].[b004] AS [b004], 
-    [Batch].[b011] AS [b011], 
-    [Batch].[b012] AS [b012], 
-    [Batch].[b013] AS [b013], 
-    [Batch].[b014] AS [b014], 
-    [Batch].[b032] AS [b032], 
-    [Batch].[b035] AS [b035], 
-    [Batch].[b037] AS [b037], 
-    [Batch].[b038] AS [b038], 
-    [Batch].[b039] AS [b039], 
-    [Batch].[b041] AS [b041], 
-    [Batch].[b042] AS [b042], 
-    [Batch].[fileid] AS [fileid], 
-    [Batch].[statusFile] AS [statusFile], 
-    [Batch].[MsgType] AS [MsgType], 
-    [Batch].[BinPan] AS [BinPan], 
-    [Batch].[liquidado] AS [liquidado], 
-    [Batch].[batchdate] AS [batchdate], 
-    [Batch].[liquidadodate] AS [liquidadodate], 
-    [Batch].[puntos] AS [puntos], 
-    [Batch].[factor_acred] AS [factor_acred], 
-    [Batch].[factor_canje] AS [factor_canje]
-    FROM [dbo].[Batch] AS [Batch]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Cards" EntityType="Self.Cards" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Cards].[cardID] AS [cardID], 
-    [Cards].[PAN] AS [PAN], 
-    [Cards].[pluginID] AS [pluginID], 
-    [Cards].[merchantID] AS [merchantID], 
-    [Cards].[clientID] AS [clientID], 
-    [Cards].[brandID] AS [brandID], 
-    [Cards].[expdateCard] AS [expdateCard], 
-    [Cards].[cvv2Card] AS [cvv2Card], 
-    [Cards].[status] AS [status], 
-    [Cards].[offset] AS [offset], 
-    [Cards].[lastOffset] AS [lastOffset], 
-    [Cards].[printed] AS [printed], 
-    [Cards].[batchprinted] AS [batchprinted], 
-    [Cards].[carddate] AS [carddate]
-    FROM [dbo].[Cards] AS [Cards]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Clients" EntityType="Self.Clients" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Clients].[clientID] AS [clientID], 
-    [Clients].[nameClient] AS [nameClient], 
-    [Clients].[CIDClient] AS [CIDClient], 
-    [Clients].[addressClient] AS [addressClient], 
-    [Clients].[phoneClient] AS [phoneClient], 
-    [Clients].[statusClient] AS [statusClient], 
-    [Clients].[fileid] AS [fileid], 
-    [Clients].[password] AS [password], 
-    [Clients].[enabled] AS [enabled], 
-    [Clients].[pwd_expired] AS [pwd_expired], 
-    [Clients].[reminder_id] AS [reminder_id], 
-    [Clients].[reminder_answer] AS [reminder_answer], 
-    [Clients].[clientdate] AS [clientdate]
-    FROM [dbo].[Clients] AS [Clients]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Transactions" EntityType="Self.Transactions" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Transactions].[TransCode] AS [TransCode], 
-    [Transactions].[NName] AS [NName], 
-    [Transactions].[Description] AS [Description], 
-    [Transactions].[AActive] AS [AActive]
-    FROM [dbo].[Transactions] AS [Transactions]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="Accounts" EntityType="Self.Accounts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountsType" EntityType="Self.AccountsType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Batch" EntityType="Self.Batch" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cards" EntityType="Self.Cards" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ACCOUNTS_CARDS" Association="Self.FK_ACCOUNTS_CARDS">
+            <End Role="Cards" EntitySet="Cards" />
+            <End Role="Accounts" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CARDS_CLIENTS" Association="Self.FK_CARDS_CLIENTS">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="Cards" EntitySet="Cards" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -313,7 +238,7 @@ warning 6002: The table/view 'Cards.dbo.Transactions' does not have a primary ke
           <Property Name="IsoDescription" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
           <Property Name="Settlement" Type="Int32" />
           <Property Name="sourceaccount" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
-          <Property Name="b002" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="b002" Type="String" MaxLength="21" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="b003" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
           <Property Name="b004" Type="Decimal" Precision="14" Scale="2" />
           <Property Name="b011" Type="Int32" />
@@ -332,7 +257,7 @@ warning 6002: The table/view 'Cards.dbo.Transactions' does not have a primary ke
           <Property Name="MsgType" Type="Int32" />
           <Property Name="BinPan" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
           <Property Name="liquidado" Type="Int32" />
-          <Property Name="batchdate" Type="DateTime" Precision="3" />
+          <Property Name="batchdate" Type="DateTime" Precision="3" Nullable="false" />
           <Property Name="liquidadodate" Type="DateTime" Precision="3" />
           <Property Name="puntos" Type="Int32" />
           <Property Name="factor_acred" Type="Decimal" Precision="5" Scale="2" />
@@ -464,6 +389,15 @@ warning 6002: The table/view 'Cards.dbo.Transactions' does not have a primary ke
             <Parameter Name="FACTORACRED" Mode="In" Type="Decimal" />
             <Parameter Name="FACTORCANJE" Mode="In" Type="Decimal" />
             <Parameter Name="SUMAUSUARIO" Mode="In" Type="String" />
+            <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PLZ_ADD_BATCH1">
+            <Parameter Name="NUMDOC" Mode="In" Type="String" />
+            <Parameter Name="MONTO" Mode="In" Type="String" />
+            <Parameter Name="TRANSCODE" Mode="In" Type="Int32" />
+            <Parameter Name="FACTORACRED" Mode="In" Type="Decimal" />
+            <Parameter Name="FACTORCANJE" Mode="In" Type="Decimal" />
+            <Parameter Name="SUMAUSARIO" Mode="In" Type="String" />
             <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
@@ -604,6 +538,7 @@ warning 6002: The table/view 'Cards.dbo.Transactions' does not have a primary ke
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="PLZ_ADD_CARD" FunctionName="CardsContext.Store.PLZ_ADD_CARD" />
+          <FunctionImportMapping FunctionImportName="PLZ_ADD_BATCH1" FunctionName="CardsContext.Store.PLZ_ADD_BATCH" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
