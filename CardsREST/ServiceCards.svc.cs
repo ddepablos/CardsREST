@@ -38,8 +38,9 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
+            version.Add(new Record() { id = "1.0.4", value = "2015-10-27 - New card/active, card/inactive, card/changestatus : Validar y retornar mensaje de excepción cuando el cliente no existe." });
             version.Add(new Record() { id = "1.0.3", value = "2015-10-27 - FIX GetBatch : El valor del campo PUNTOS para transacciones de tipo de cuenta Lealtad." });
-            version.Add(new Record(){id = "1.0.2", value = "2015-09-23 - FIX GetReport" });
+            version.Add(new Record(){id = "1.0.2", value = "2015-09-23 - New GetReport" });
 
             return version;
             
@@ -148,7 +149,7 @@ namespace CardsREST
                     /* Buscar por el campo Cédula del Cliente */
                     var q = from cl in context.Clients
                             join c in context.Cards on cl.clientID equals c.clientID
-                            where cl.CIDClient.Contains(keyword) //(c.status == 0 || c.status == 1) &&
+                            where cl.CIDClient.Equals(keyword) //(c.status == 0 || c.status == 1) &&
                             orderby c.cardID descending
                             select new CClient()
                             {
@@ -286,7 +287,7 @@ namespace CardsREST
                 case "2":
                     detail += "Los valores recibidos poseen algún valor nulo o el total de valores recibidos no es correcto.";
                     break;
-                case "3":
+                case "-2":
                     detail += "El Número de Documento no existe o no está registrado.";
                     break;
                 case "4":
