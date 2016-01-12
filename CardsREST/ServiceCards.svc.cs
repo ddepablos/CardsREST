@@ -38,10 +38,12 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
+            version.Add(new Record() { id = "1.1.0", value = "2016-01-12 - Release 1.1.0" });
+            version.Add(new Record() { id = "1.0.6", value = "2015-11-17 - AddBatch : Retornar el valor de BatchID en los campos excode & exdetail / Implementación de detalles de mensajería para Operación Rechazada." });
             version.Add(new Record() { id = "1.0.5", value = "2015-10-28 - FIX Actualización del Modelo y Stored Procedures." });
             version.Add(new Record() { id = "1.0.4", value = "2015-10-27 - New card/active, card/inactive, card/changestatus : Validar y retornar mensaje de excepción cuando el cliente no existe." });
             version.Add(new Record() { id = "1.0.3", value = "2015-10-27 - FIX GetBatch : El valor del campo PUNTOS para transacciones de tipo de cuenta Lealtad." });
-            version.Add(new Record(){id = "1.0.2", value = "2015-09-23 - New GetReport" });
+            version.Add(new Record() { id = "1.0.2", value = "2015-09-23 - New GetReport" });
 
             return version;
             
@@ -291,6 +293,9 @@ namespace CardsREST
                 case "-2":
                     detail += "El Número de Documento no existe o no está registrado.";
                     break;
+                case "-3":
+                    detail += "El Número de Tarjeta no existe o no está registrado.";
+                    break;
                 case "4":
                     detail += "El Número de Tarjeta no existe o no está registrado.";
                     break;
@@ -306,6 +311,9 @@ namespace CardsREST
                     break;
                 case "8":
                     detail += "Operación no válida, no se puede cambiar al mismo estatus a la tarjeta.";
+                    break;
+                case "-4":
+                    detail += "Operación no válida, no se puede ejecutar el cambio de estatus a la tarjeta.";
                     break;
                 case "9":
                     detail += "El Número de la Tarjeta ya ha sido impreso.";
@@ -324,6 +332,18 @@ namespace CardsREST
                     break;
                 case "308":
                     detail += "Operación Rechazada: El cambio de estatus no aplica al estatus actual de la tarjeta.";
+                    break;
+                case "-100":
+                    detail += "Operación Rechazada: Saldo Insuficiente.";
+                    break;
+                case "-200":
+                    detail += "Operación Rechazada: Número de Documento o Monto no son válidos.";
+                    break;
+                case "-300":
+                    detail += "Operación Rechazada: Número de Documento no existe.";
+                    break;
+                case "-500":
+                    detail += "Operación Rechazada: Número de Tarjeta no está activa o Número de Cuenta no válido.";
                     break;
                 default:
                     detail += code;
@@ -496,7 +516,7 @@ namespace CardsREST
                     resCode = respuesta.Value.ToString();
                 }
 
-                //resDetail = getExcepcionDetail(resCode);
+                resDetail = getExcepcionDetail(resCode);
 
                 return new Response() { excode = resCode, exdetail = resDetail, exsource = resSource };
 
