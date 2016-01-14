@@ -38,6 +38,7 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
+            version.Add(new Record() { id = "1.1.0", value = "2016-01-14 - Release 1.1.1 - GetBalance : Fix de linq con la condición -contains- por -equals- " });
             version.Add(new Record() { id = "1.1.0", value = "2016-01-12 - Release 1.1.0" });
             version.Add(new Record() { id = "1.0.6", value = "2015-11-17 - AddBatch : Retornar el valor de BatchID en los campos excode & exdetail / Implementación de detalles de mensajería para Operación Rechazada." });
             version.Add(new Record() { id = "1.0.5", value = "2015-10-28 - FIX Actualización del Modelo y Stored Procedures." });
@@ -461,7 +462,8 @@ namespace CardsREST
                             join a in context.Accounts on at.accountType equals a.accountType
                             join c in context.Cards on a.cardID equals c.cardID
                             join cl in context.Clients on c.clientID equals cl.clientID
-                            where (cl.CIDClient.Contains(numdoc))
+                            where (cl.CIDClient.Equals(numdoc))
+                            /*where (cl.CIDClient.Contains(numdoc))*/
                             select new CBalance()
                             {
                                 numdoc = numdoc,
