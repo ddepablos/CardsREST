@@ -144,8 +144,8 @@
       <LastGenOutput>CardsModel.cs</LastGenOutput>
     </Content>
     <None Include="Properties\PublishProfiles\CardsWS.pubxml" />
-    <None Include="Properties\PublishProfiles\CardsWS_DESA.pubxml" />
-    <None Include="Properties\PublishProfiles\CardsWS_QA.pubxml" />
+    <None Include="Properties\PublishProfiles\1.DESARROLLO.pubxml" />
+    <None Include="Properties\PublishProfiles\2.PRODUCCIÓN.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

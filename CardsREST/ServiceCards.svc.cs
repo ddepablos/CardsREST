@@ -38,6 +38,7 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
+            version.Add(new Record() { id = "1.1.1", value = "2016-01-29 - Release 1.1.1 - GetBatch : Fix de linq con la condición -contains- por -equals- " });
             version.Add(new Record() { id = "1.1.0", value = "2016-01-14 - Release 1.1.1 - GetBalance : Fix de linq con la condición -contains- por -equals- " });
             version.Add(new Record() { id = "1.1.0", value = "2016-01-12 - Release 1.1.0" });
             version.Add(new Record() { id = "1.0.6", value = "2015-11-17 - AddBatch : Retornar el valor de BatchID en los campos excode & exdetail / Implementación de detalles de mensajería para Operación Rechazada." });
@@ -389,7 +390,8 @@ namespace CardsREST
                              join b in context.Batches on tc.TransCode equals b.TransCode
                              join ca in context.Cards on b.b002 equals ca.PAN
                              join cl in context.Clients on ca.clientID equals cl.clientID
-                             where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Contains(numdoc) && lealtad.Contains(b.TransCode)
+                             /*where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Contains(numdoc) && lealtad.Contains(b.TransCode)*/
+                             where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && lealtad.Contains(b.TransCode)
                              select new CBatch
                              {
                                  batchid = b.BatchID,
@@ -425,7 +427,8 @@ namespace CardsREST
                              join b in context.Batches on tc.TransCode equals b.TransCode
                              join ca in context.Cards on b.b002 equals ca.PAN
                              join cl in context.Clients on ca.clientID equals cl.clientID
-                             where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Contains(numdoc) && prepago.Contains(b.TransCode)
+                             /*where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Contains(numdoc) && prepago.Contains(b.TransCode)*/
+                             where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && prepago.Contains(b.TransCode)
                              select new CBatch
                              {
                                  batchid = b.BatchID,
