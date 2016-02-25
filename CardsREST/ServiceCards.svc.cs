@@ -38,8 +38,9 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
-            version.Add(new Record() { id = "1.1.1", value = "2016-01-29 - Release 1.1.1 - GetBatch : Fix de linq con la condición -contains- por -equals- " });
-            version.Add(new Record() { id = "1.1.0", value = "2016-01-14 - Release 1.1.1 - GetBalance : Fix de linq con la condición -contains- por -equals- " });
+            version.Add(new Record() { id = "1.1.3", value = "2016-02-25 - Release 1.1.3 - GetReport : Fix de linq con el rango de fechas." });
+            version.Add(new Record() { id = "1.1.2", value = "2016-01-29 - Release 1.1.2 - GetBatch : Fix de linq con la condición -contains- por -equals- " });
+            version.Add(new Record() { id = "1.1.1", value = "2016-01-14 - Release 1.1.1 - GetBalance : Fix de linq con la condición -contains- por -equals- " });
             version.Add(new Record() { id = "1.1.0", value = "2016-01-12 - Release 1.1.0" });
             version.Add(new Record() { id = "1.0.6", value = "2015-11-17 - AddBatch : Retornar el valor de BatchID en los campos excode & exdetail / Implementación de detalles de mensajería para Operación Rechazada." });
             version.Add(new Record() { id = "1.0.5", value = "2015-10-28 - FIX Actualización del Modelo y Stored Procedures." });
@@ -154,7 +155,7 @@ namespace CardsREST
                     /* Buscar por el campo Cédula del Cliente */
                     var q = from cl in context.Clients
                             join c in context.Cards on cl.clientID equals c.clientID
-                            where cl.CIDClient.Equals(keyword) //(c.status == 0 || c.status == 1) &&
+                            where cl.CIDClient.Equals(keyword) 
                             orderby c.cardID descending
                             select new CClient()
                             {
@@ -390,7 +391,6 @@ namespace CardsREST
                              join b in context.Batches on tc.TransCode equals b.TransCode
                              join ca in context.Cards on b.b002 equals ca.PAN
                              join cl in context.Clients on ca.clientID equals cl.clientID
-                             /*where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Contains(numdoc) && lealtad.Contains(b.TransCode)*/
                              where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && lealtad.Contains(b.TransCode)
                              select new CBatch
                              {
@@ -400,7 +400,7 @@ namespace CardsREST
                                  transcode = b.TransCode.ToString(),
                                  transname = tc.NName,
                                  saldo = b.b004.ToString(),
-                                 puntos = b.puntos.ToString(),          //.Replace(".00", ""),
+                                 puntos = b.puntos.ToString(),          
                                  isodescription = b.IsoDescription
                              });
 
@@ -427,7 +427,6 @@ namespace CardsREST
                              join b in context.Batches on tc.TransCode equals b.TransCode
                              join ca in context.Cards on b.b002 equals ca.PAN
                              join cl in context.Clients on ca.clientID equals cl.clientID
-                             /*where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Contains(numdoc) && prepago.Contains(b.TransCode)*/
                              where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && prepago.Contains(b.TransCode)
                              select new CBatch
                              {
@@ -466,7 +465,6 @@ namespace CardsREST
                             join c in context.Cards on a.cardID equals c.cardID
                             join cl in context.Clients on c.clientID equals cl.clientID
                             where (cl.CIDClient.Equals(numdoc))
-                            /*where (cl.CIDClient.Contains(numdoc))*/
                             select new CBalance()
                             {
                                 numdoc = numdoc,
@@ -565,11 +563,14 @@ namespace CardsREST
                     int untilmonth = int.Parse(untildate.Substring(4,2));
                     int untilday = int.Parse(untildate.Substring(6,2));
 
-                   var query = (from tc in context.Transactions
+                    var fromDate = new DateTime(fromyear, frommonth, fromday, 1, 0, 0);
+                    var untilDate = new DateTime(untilyear, untilmonth, untilday, 23, 59, 0);
+
+                    var query = (from tc in context.Transactions
                                  join b in context.Batches on tc.TransCode equals b.TransCode
                                  join ca in context.Cards on b.b002 equals ca.PAN
                                  join cl in context.Clients on ca.clientID equals cl.clientID
-                                 where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Contains(numdoc) && prepago.Contains(b.TransCode) 
+                                 where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && prepago.Contains(b.TransCode) 
                                  select new CBatch
                                  {
                                      batchid = b.BatchID,
@@ -583,27 +584,14 @@ namespace CardsREST
                                      transmonth = b.transmonth,
                                      transyear = b.transyear,
                                      transdate = b.transDate,
-                                     numdoc = cl.CIDClient
+                                     numdoc = cl.CIDClient,
+                                     DateValue = b.batchdate
                                  });
 
                     if (trx != "NULL")
                         query = query.Where(c => c.transcode.Equals(trx));
 
-                    if ( untilday == 1 && untilmonth > 1 )
-                        untilmonth--;
-
-                    query = query.Where(c => c.transyear >= fromyear).Where(c => c.transmonth >= frommonth && c.transmonth <= untilmonth);
-
-                    if (fromday < untilday)
-                    {
-                        query = query.Where(c => c.transday >= fromday && c.transday <= untilday);
-                    }
-                    else if ( fromday > untilday )
-                    {
-                        query = query.Where(c => c.transday >= fromday || c.transday <= untilday);
-                    }
-
-                    query = query.Where(c => c.transyear <= untilyear);
+                    query = query.Where(c => c.DateValue >= fromDate && c.DateValue <= untilDate);
 
                     return query.ToList();
 
