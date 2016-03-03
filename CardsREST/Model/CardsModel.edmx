@@ -43,7 +43,7 @@
           <Property Name="transmonth" Type="int" />
           <Property Name="transday" Type="int" />
           <Property Name="transDate" Type="varchar" MaxLength="8" />
-          <Property Name="IsoDescription" Type="varchar" MaxLength="75" />
+          <Property Name="IsoDescription" Type="varchar" MaxLength="100" />
           <Property Name="Settlement" Type="int" />
           <Property Name="sourceaccount" Type="varchar" MaxLength="21" />
           <Property Name="b002" Type="varchar" MaxLength="21" Nullable="false" />
@@ -117,6 +117,18 @@
           <Property Name="Description" Type="varchar" MaxLength="50" />
           <Property Name="AActive" Type="int" />
         </EntityType>
+        <Association Name="FK_Accounts_AccType">
+          <End Role="AccountsType" Type="Self.AccountsType" Multiplicity="0..1" />
+          <End Role="Accounts" Type="Self.Accounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountsType">
+              <PropertyRef Name="accountType" />
+            </Principal>
+            <Dependent Role="Accounts">
+              <PropertyRef Name="accountType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ACCOUNTS_CARDS">
           <End Role="Cards" Type="Self.Cards" Multiplicity="0..1" />
           <End Role="Accounts" Type="Self.Accounts" Multiplicity="*" />
@@ -161,12 +173,26 @@
           <Parameter Name="ADDRESSCLIENT" Type="nvarchar" Mode="In" />
           <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
         </Function>
+        <Function Name="PLZ_ROLLBACK_BATCH" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUMDOC" Type="nvarchar" Mode="In" />
+          <Parameter Name="BATCHID" Type="int" Mode="In" />
+          <Parameter Name="SUMAUSARIO" Type="nvarchar" Mode="In" />
+          <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
+        </Function>
         <Function Name="PLZ_TRANSACCION_PUNTOS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="NUMDOC" Type="nvarchar" Mode="In" />
           <Parameter Name="PUNTOS" Type="int" Mode="In" />
           <Parameter Name="TRANSCODE" Type="int" Mode="In" />
           <Parameter Name="FACTORACRED" Type="numeric" Mode="In" />
           <Parameter Name="FACTORCANJE" Type="numeric" Mode="In" />
+          <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="PLZ_TRANSFERENCIA_BATCH" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NUMDOC1" Type="nvarchar" Mode="In" />
+          <Parameter Name="NUMDOC2" Type="nvarchar" Mode="In" />
+          <Parameter Name="MONTO" Type="nvarchar" Mode="In" />
+          <Parameter Name="ACCOUNTTYPE" Type="int" Mode="In" />
+          <Parameter Name="SUMAUSARIO" Type="nvarchar" Mode="In" />
           <Parameter Name="RESPONSE" Type="int" Mode="InOut" />
         </Function>
         <Function Name="PLZ_UPD_CARD_STATUS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -181,6 +207,10 @@
           <EntitySet Name="Cards" EntityType="Self.Cards" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Accounts_AccType" Association="Self.FK_Accounts_AccType">
+            <End Role="AccountsType" EntitySet="AccountsType" />
+            <End Role="Accounts" EntitySet="Accounts" />
+          </AssociationSet>
           <AssociationSet Name="FK_ACCOUNTS_CARDS" Association="Self.FK_ACCOUNTS_CARDS">
             <End Role="Cards" EntitySet="Cards" />
             <End Role="Accounts" EntitySet="Accounts" />
@@ -235,7 +265,7 @@
           <Property Name="transmonth" Type="Int32" />
           <Property Name="transday" Type="Int32" />
           <Property Name="transDate" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
-          <Property Name="IsoDescription" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="IsoDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Settlement" Type="Int32" />
           <Property Name="sourceaccount" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
           <Property Name="b002" Type="String" MaxLength="21" FixedLength="false" Unicode="false" Nullable="false" />
@@ -400,6 +430,20 @@
             <Parameter Name="SUMAUSARIO" Mode="In" Type="String" />
             <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="PLZ_TRANSFERENCIA_BATCH">
+            <Parameter Name="NUMDOC1" Mode="In" Type="String" />
+            <Parameter Name="NUMDOC2" Mode="In" Type="String" />
+            <Parameter Name="MONTO" Mode="In" Type="String" />
+            <Parameter Name="ACCOUNTTYPE" Mode="In" Type="Int32" />
+            <Parameter Name="SUMAUSARIO" Mode="In" Type="String" />
+            <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="PLZ_ROLLBACK_BATCH">
+            <Parameter Name="NUMDOC" Mode="In" Type="String" />
+            <Parameter Name="BATCHID" Mode="In" Type="Int32" />
+            <Parameter Name="SUMAUSARIO" Mode="In" Type="String" />
+            <Parameter Name="RESPONSE" Mode="InOut" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="Transaction">
           <Key>
@@ -539,6 +583,8 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="PLZ_ADD_CARD" FunctionName="CardsContext.Store.PLZ_ADD_CARD" />
           <FunctionImportMapping FunctionImportName="PLZ_ADD_BATCH1" FunctionName="CardsContext.Store.PLZ_ADD_BATCH" />
+          <FunctionImportMapping FunctionImportName="PLZ_TRANSFERENCIA_BATCH" FunctionName="CardsContext.Store.PLZ_TRANSFERENCIA_BATCH" />
+          <FunctionImportMapping FunctionImportName="PLZ_ROLLBACK_BATCH" FunctionName="CardsContext.Store.PLZ_ROLLBACK_BATCH" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

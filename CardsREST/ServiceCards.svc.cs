@@ -348,6 +348,25 @@ namespace CardsREST
                 case "-500":
                     detail += "Operación Rechazada: Número de Tarjeta no está activa o Número de Cuenta no válido.";
                     break;
+                /*
+                    DECLARE @PARAMETROSNOVALIDOS INT = -900	
+                    DECLARE @CLIENTENOFOUND		 INT = -901	
+                    DECLARE @TRXNOFOUND			 INT = -902
+                    DECLARE @SALDOINSUFICIENTE   INT = -903
+                 */
+                case "-900":
+                    detail += "Operación Rechazada: Los valores de los parámetros no son correctos.";
+                    break;
+                case "-901":
+                    detail += "Operación Rechazada: El Número del Documento (Origen o Destino) no está registrado en el sistema.";
+                    break;
+                case "-902":
+                    detail += "Operación Rechazada: La transacción para ser anulada no es válida.";
+                    break;
+                case "-903":
+                    detail += "Operación Rechazada: El Saldo es insuficiente para completar la transacción.";
+                    break;
+
                 default:
                     detail += code;
                     break;
@@ -603,6 +622,37 @@ namespace CardsREST
                 throw e;
             }
           
+        }
+
+        /* 
+         * Nombre      :    AddTransfer
+         * Descripción :    Implementar transacciones de transferencias. Aplica para cualquier tipo de cuenta. 
+         * Parámetros  :    string origennumdoc, string destinonumdoc, string monto, string accounttype, string sumausuario
+         */
+        public Response AddTransfer(string origennumdoc, string destinonumdoc, string monto, string accounttype, string sumausuario)
+        {
+
+            string resCode = "1";
+            string resDetail = "Excepción: ";
+            string resSource = SERVICE_NAME + String.Format("AddTransfer(string origennumdoc={0}, string destinonumdoc={1}, string monto={2}, string accounttype={3}, string sumausuario={4})", origennumdoc, destinonumdoc, monto, accounttype, sumausuario);
+
+            using (CardsEntities context = new CardsEntities())
+            {
+
+                ObjectParameter respuesta = new ObjectParameter("response", typeof(int));
+
+                if (origennumdoc != null && destinonumdoc != null && monto != null && accounttype != null && sumausuario != null)
+                {
+                    context.PLZ_TRANSFERENCIA_BATCH(origennumdoc , destinonumdoc , monto , int.Parse(accounttype) , sumausuario, respuesta);
+                    resCode = respuesta.Value.ToString();
+                }
+
+                resDetail = getExcepcionDetail(resCode);
+
+                return new Response() { excode = resCode, exdetail = resDetail, exsource = resSource };
+
+            }
+        
         }
     }
 

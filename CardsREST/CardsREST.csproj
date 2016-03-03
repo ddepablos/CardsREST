@@ -110,7 +110,6 @@
     <Compile Include="Model\Client.cs">
       <DependentUpon>CardsModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\Extensions.cs" />
     <Compile Include="Model\Record.cs" />
     <Compile Include="Model\Response.cs" />
     <Compile Include="Model\Transaccion.cs" />

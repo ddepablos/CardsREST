@@ -209,6 +209,60 @@ public partial class CardsEntities : DbContext
         return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PLZ_ADD_BATCH1", nUMDOCParameter, mONTOParameter, tRANSCODEParameter, fACTORACREDParameter, fACTORCANJEParameter, sUMAUSARIOParameter, rESPONSE);
     }
 
+
+    public virtual int PLZ_TRANSFERENCIA_BATCH(string nUMDOC1, string nUMDOC2, string mONTO, Nullable<int> aCCOUNTTYPE, string sUMAUSARIO, ObjectParameter rESPONSE)
+    {
+
+        var nUMDOC1Parameter = nUMDOC1 != null ?
+            new ObjectParameter("NUMDOC1", nUMDOC1) :
+            new ObjectParameter("NUMDOC1", typeof(string));
+
+
+        var nUMDOC2Parameter = nUMDOC2 != null ?
+            new ObjectParameter("NUMDOC2", nUMDOC2) :
+            new ObjectParameter("NUMDOC2", typeof(string));
+
+
+        var mONTOParameter = mONTO != null ?
+            new ObjectParameter("MONTO", mONTO) :
+            new ObjectParameter("MONTO", typeof(string));
+
+
+        var aCCOUNTTYPEParameter = aCCOUNTTYPE.HasValue ?
+            new ObjectParameter("ACCOUNTTYPE", aCCOUNTTYPE) :
+            new ObjectParameter("ACCOUNTTYPE", typeof(int));
+
+
+        var sUMAUSARIOParameter = sUMAUSARIO != null ?
+            new ObjectParameter("SUMAUSARIO", sUMAUSARIO) :
+            new ObjectParameter("SUMAUSARIO", typeof(string));
+
+
+        return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PLZ_TRANSFERENCIA_BATCH", nUMDOC1Parameter, nUMDOC2Parameter, mONTOParameter, aCCOUNTTYPEParameter, sUMAUSARIOParameter, rESPONSE);
+    }
+
+
+    public virtual int PLZ_ROLLBACK_BATCH(string nUMDOC, Nullable<int> bATCHID, string sUMAUSARIO, ObjectParameter rESPONSE)
+    {
+
+        var nUMDOCParameter = nUMDOC != null ?
+            new ObjectParameter("NUMDOC", nUMDOC) :
+            new ObjectParameter("NUMDOC", typeof(string));
+
+
+        var bATCHIDParameter = bATCHID.HasValue ?
+            new ObjectParameter("BATCHID", bATCHID) :
+            new ObjectParameter("BATCHID", typeof(int));
+
+
+        var sUMAUSARIOParameter = sUMAUSARIO != null ?
+            new ObjectParameter("SUMAUSARIO", sUMAUSARIO) :
+            new ObjectParameter("SUMAUSARIO", typeof(string));
+
+
+        return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PLZ_ROLLBACK_BATCH", nUMDOCParameter, bATCHIDParameter, sUMAUSARIOParameter, rESPONSE);
+    }
+
 }
 
 }
