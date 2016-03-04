@@ -84,7 +84,6 @@ namespace CardsREST
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "/addtransfer/{origennumdoc}/{destinonumdoc}/{monto}/{accounttype}/{sumausuario}")]
         Response AddTransfer(string origennumdoc, string destinonumdoc, string monto, string accounttype, string sumausuario);
 
-
         #endregion
 
     }

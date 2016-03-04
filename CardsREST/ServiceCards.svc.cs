@@ -38,6 +38,7 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
+            version.Add(new Record() { id = "1.1.4b", value = "2016-03-04 - Transferencia entre Cuentas + Anulación de Recarga" });
             version.Add(new Record() { id = "1.1.3", value = "2016-02-25 - Release 1.1.3 - GetReport : Fix de linq con el rango de fechas." });
             version.Add(new Record() { id = "1.1.2", value = "2016-01-29 - Release 1.1.2 - GetBatch : Fix de linq con la condición -contains- por -equals- " });
             version.Add(new Record() { id = "1.1.1", value = "2016-01-14 - Release 1.1.1 - GetBalance : Fix de linq con la condición -contains- por -equals- " });
@@ -118,7 +119,15 @@ namespace CardsREST
 
                 if (numdoc != null && monto != null && transcode != null && (factoracred != null || factorcanje != null))
                 {
-                    context.PLZ_ADD_BATCH1(numdoc, monto, int.Parse(transcode), decimal.Parse(factoracred), decimal.Parse(factorcanje), sumausuario, respuesta);
+                    if ( transcode.Equals("161"))
+                    {
+                        context.PLZ_ROLLBACK_BATCH(numdoc, int.Parse(monto), sumausuario, respuesta);
+                    }
+                    else
+                    {
+                        context.PLZ_ADD_BATCH1(numdoc, monto, int.Parse(transcode), decimal.Parse(factoracred), decimal.Parse(factorcanje), sumausuario, respuesta);
+                    }
+
                     resCode = respuesta.Value.ToString();
                 }
 
@@ -366,7 +375,28 @@ namespace CardsREST
                 case "-903":
                     detail += "Operación Rechazada: El Saldo es insuficiente para completar la transacción.";
                     break;
-
+                /*
+                DECLARE @PARAMETROSNOVALIDOS INT = -910	
+                DECLARE @CLIENTENOFOUND		 INT = -911	
+                DECLARE @TRXNOFOUND			 INT = -912
+                DECLARE @SALDOINSUFICIENTE   INT = -913
+                DECLARE @TRXNOVALID			 INT = -914                     
+                */
+                case "-910":
+                    detail += "Operación Rechazada: Los valores de los parámetros no son correctos.";
+                    break;
+                case "-911":
+                    detail += "Operación Rechazada: El Número del Documento no está registrado en el sistema.";
+                    break;
+                case "-912":
+                    detail += "Operación Rechazada: La transacción para ser anulada no es válida.";
+                    break;
+                case "-913":
+                    detail += "Operación Rechazada: El Saldo es insuficiente para completar la transacción.";
+                    break;
+                case "-914":
+                    detail += "Operación Rechazada: La Transacción no cumple con los criterios para reversar.";
+                    break;
                 default:
                     detail += code;
                     break;
@@ -401,7 +431,7 @@ namespace CardsREST
          */
         private List<CBatch> GetBatchLealtad(string numdoc) {
 
-            int?[] lealtad = { 318, 319 };
+            int?[] lealtad = { 318, 319, 201, 202, 203, 204 };
 
             using (CardsEntities context = new CardsEntities())
             {
@@ -420,7 +450,8 @@ namespace CardsREST
                                  transname = tc.NName,
                                  saldo = b.b004.ToString(),
                                  puntos = b.puntos.ToString(),          
-                                 isodescription = b.IsoDescription
+                                 isodescription = b.IsoDescription,
+                                 b037 = b.b037
                              });
 
                 return query.ToList();
@@ -437,7 +468,7 @@ namespace CardsREST
         private List<CBatch> GetBatchPrepago(string numdoc)
         {
 
-            int?[] prepago = { 145, 200 };
+            int?[] prepago = { 145, 200, 161 };
 
             using (CardsEntities context = new CardsEntities())
             {
@@ -454,9 +485,10 @@ namespace CardsREST
                                  pan = b.b002,
                                  transcode = b.TransCode.ToString(),
                                  transname = tc.NName,
-                                 saldo = (b.b004).ToString().Replace(".00", ""),    //b.b004.ToString(),
+                                 saldo = (b.b004).ToString().Replace(".00", ""),    
                                  puntos = b.puntos.ToString(),
-                                 isodescription = b.IsoDescription
+                                 isodescription = b.IsoDescription,
+                                 b037 = b.b037
                              });
 
                 return query.ToList();

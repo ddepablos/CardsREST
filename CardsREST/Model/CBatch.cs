@@ -22,6 +22,7 @@ namespace CardsREST.Model
         public int? transmonth { get; set; }
         public int? transday { get; set; }
         public string transdate { get; set; }
+        public int? b037 { get; set; }
         public DateTime DateValue { get; set; }
     }
 }
