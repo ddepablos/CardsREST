@@ -370,9 +370,6 @@ namespace CardsREST
                     detail += "Operación Rechazada: El Número del Documento (Origen o Destino) no está registrado en el sistema.";
                     break;
                 case "-902":
-                    detail += "Operación Rechazada: La transacción para ser anulada no es válida.";
-                    break;
-                case "-903":
                     detail += "Operación Rechazada: El Saldo es insuficiente para completar la transacción.";
                     break;
                 /*
@@ -431,7 +428,7 @@ namespace CardsREST
          */
         private List<CBatch> GetBatchLealtad(string numdoc) {
 
-            int?[] lealtad = { 318, 319, 201, 202, 203, 204 };
+            int?[] lealtad = { 318, 319, 203, 204 };
 
             using (CardsEntities context = new CardsEntities())
             {
@@ -451,7 +448,8 @@ namespace CardsREST
                                  saldo = b.b004.ToString(),
                                  puntos = b.puntos.ToString(),          
                                  isodescription = b.IsoDescription,
-                                 b037 = b.b037
+                                 b037 = b.b037,
+                                 batchtime = b.b012
                              });
 
                 return query.ToList();
@@ -468,7 +466,7 @@ namespace CardsREST
         private List<CBatch> GetBatchPrepago(string numdoc)
         {
 
-            int?[] prepago = { 145, 200, 161 };
+            int?[] prepago = { 145, 200, 161, 201, 202 };
 
             using (CardsEntities context = new CardsEntities())
             {
@@ -488,7 +486,8 @@ namespace CardsREST
                                  saldo = (b.b004).ToString().Replace(".00", ""),    
                                  puntos = b.puntos.ToString(),
                                  isodescription = b.IsoDescription,
-                                 b037 = b.b037
+                                 b037 = b.b037,
+                                 batchtime = b.b012
                              });
 
                 return query.ToList();
@@ -593,9 +592,93 @@ namespace CardsREST
         /* 
          * Nombre      :    GetReport
          * Descripción :    Retornar listado de transacciones, basado en conjunto de parámetros. 
-         * Parámetros  :    string fromdate, string untildate, string numdoc = null, string trx = null
+         * Parámetros  :    string fromdate, string untildate, string numdoc = null, string accounttype = null, string trx = null
          */
-        public List<CBatch> GetReport(string fromdate, string untildate, string numdoc = null, string trx = null)
+        public List<CBatch> GetReport(string fromdate, string untildate, string numdoc = null, string accounttype = null, string trx = null)
+        {
+
+            if ( trx.Equals("NULL") )
+        	{
+                if (accounttype.Equals("5"))
+	            {
+                    return GetReportPrepago(fromdate, untildate, numdoc);
+	            }
+                else if (accounttype.Equals("7"))
+	            {
+		            return GetReportLealtad( fromdate,  untildate,  numdoc );
+	            }
+            }
+            else
+            {
+                try
+                {
+
+                    using (CardsEntities context = new CardsEntities())
+                    {
+
+                        int?[] prepago = { 145, 200, 161, 201, 202, 318, 319, 203, 204 };
+
+                        int fromyear = int.Parse(fromdate.Substring(0, 4));
+                        int frommonth = int.Parse(fromdate.Substring(4, 2));
+                        int fromday = int.Parse(fromdate.Substring(6, 2));
+
+                        int untilyear = int.Parse(untildate.Substring(0, 4));
+                        int untilmonth = int.Parse(untildate.Substring(4, 2));
+                        int untilday = int.Parse(untildate.Substring(6, 2));
+
+                        var fromDate = new DateTime(fromyear, frommonth, fromday, 1, 0, 0);
+                        var untilDate = new DateTime(untilyear, untilmonth, untilday, 23, 59, 0);
+
+                        var query = (from tc in context.Transactions
+                                     join b in context.Batches on tc.TransCode equals b.TransCode
+                                     join ca in context.Cards on b.b002 equals ca.PAN
+                                     join cl in context.Clients on ca.clientID equals cl.clientID
+                                     where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && prepago.Contains(b.TransCode)
+                                     select new CBatch
+                                     {
+                                         batchid = b.BatchID,
+                                         fecha = b.transDate,
+                                         pan = b.b002,
+                                         transcode = b.TransCode.ToString(),
+                                         transname = tc.NName,
+                                         saldo = b.b004.ToString(),
+                                         isodescription = b.IsoDescription,
+                                         transday = b.transday,
+                                         transmonth = b.transmonth,
+                                         transyear = b.transyear,
+                                         transdate = b.transDate,
+                                         numdoc = cl.CIDClient,
+                                         DateValue = b.batchdate,
+                                         batchtime = b.b012
+                                     });
+
+                        if (trx != "NULL")
+                        {
+                            query = query.Where(c => c.transcode.Equals(trx));
+                        }
+
+                        query = query.Where(c => c.DateValue >= fromDate && c.DateValue <= untilDate);
+
+                        return query.ToList();
+
+                    }
+
+                }
+                catch (Exception)
+                {
+                    
+                    throw;
+                }
+            }
+
+            return null;
+
+        }
+
+        /*
+         *  GetReportPrepago : Retornar todas las transacciones prepago en un rango de fechas.
+         */
+        private List<CBatch> GetReportPrepago(string fromdate, string untildate, string numdoc = null)
         {
 
             try
@@ -604,7 +687,69 @@ namespace CardsREST
                 using (CardsEntities context = new CardsEntities())
                 {
 
-                    int?[] prepago = { 145, 200 };
+                    int?[] prepago = { 145, 200, 161, 201, 202 };
+
+                    int fromyear = int.Parse(fromdate.Substring(0, 4));
+                    int frommonth = int.Parse(fromdate.Substring(4, 2));
+                    int fromday = int.Parse(fromdate.Substring(6, 2));
+
+                    int untilyear = int.Parse(untildate.Substring(0, 4));
+                    int untilmonth = int.Parse(untildate.Substring(4, 2));
+                    int untilday = int.Parse(untildate.Substring(6, 2));
+
+                    var fromDate = new DateTime(fromyear, frommonth, fromday, 1, 0, 0);
+                    var untilDate = new DateTime(untilyear, untilmonth, untilday, 23, 59, 0);
+
+                    var query = (from tc in context.Transactions
+                                 join b in context.Batches on tc.TransCode equals b.TransCode
+                                 join ca in context.Cards on b.b002 equals ca.PAN
+                                 join cl in context.Clients on ca.clientID equals cl.clientID
+                                 where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && prepago.Contains(b.TransCode)
+                                 select new CBatch
+                                 {
+                                     batchid = b.BatchID,
+                                     fecha = b.transDate,
+                                     pan = b.b002,
+                                     transcode = b.TransCode.ToString(),
+                                     transname = tc.NName,
+                                     saldo = b.b004.ToString(),
+                                     isodescription = b.IsoDescription,
+                                     transday = b.transday,
+                                     transmonth = b.transmonth,
+                                     transyear = b.transyear,
+                                     transdate = b.transDate,
+                                     numdoc = cl.CIDClient,
+                                     DateValue = b.batchdate,
+                                     batchtime = b.b012
+                                 });
+
+                    query = query.Where(c => c.DateValue >= fromDate && c.DateValue <= untilDate);
+
+                    return query.ToList();
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        /*
+         *  GetReportLealtad : Retornar todas las transacciones lealtad en un rango de fechas.
+         */
+        private List<CBatch> GetReportLealtad(string fromdate, string untildate, string numdoc = null)
+        { 
+
+            try
+            {
+
+                using (CardsEntities context = new CardsEntities())
+                {
+
+                    int?[] prepago = { 318, 319, 203, 204 };
 
                     int fromyear = int.Parse(fromdate.Substring(0,4));
                     int frommonth = int.Parse(fromdate.Substring(4,2));
@@ -636,11 +781,9 @@ namespace CardsREST
                                      transyear = b.transyear,
                                      transdate = b.transDate,
                                      numdoc = cl.CIDClient,
-                                     DateValue = b.batchdate
+                                     DateValue = b.batchdate,
+                                     batchtime = b.b012
                                  });
-
-                    if (trx != "NULL")
-                        query = query.Where(c => c.transcode.Equals(trx));
 
                     query = query.Where(c => c.DateValue >= fromDate && c.DateValue <= untilDate);
 
@@ -655,6 +798,7 @@ namespace CardsREST
             }
           
         }
+
 
         /* 
          * Nombre      :    AddTransfer

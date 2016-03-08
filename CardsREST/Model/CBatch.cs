@@ -24,5 +24,6 @@ namespace CardsREST.Model
         public string transdate { get; set; }
         public int? b037 { get; set; }
         public DateTime DateValue { get; set; }
+        public string batchtime { get; set; }
     }
 }
