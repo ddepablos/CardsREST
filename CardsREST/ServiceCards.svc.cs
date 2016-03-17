@@ -38,7 +38,7 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
-            version.Add(new Record() { id = "1.1.4b", value = "2016-03-15 - Sprint 2" });
+            version.Add(new Record() { id = "1.1.4b", value = "2016-03-16 - Sprint 2" });
             version.Add(new Record() { id = "1.1.4b", value = "2016-03-04 - Sprint 1" });
             version.Add(new Record() { id = "1.1.3", value = "2016-02-25 - Release 1.1.3 - GetReport : Fix de linq con el rango de fechas." });
             version.Add(new Record() { id = "1.1.2", value = "2016-01-29 - Release 1.1.2 - GetBatch : Fix de linq con la condición -contains- por -equals- " });
@@ -660,7 +660,8 @@ namespace CardsREST
                                     transyear = b.transyear,
                                     transdate = b.transDate,
                                     numdoc = cl.CIDClient,
-                                    DateValue = b.batchdate
+                                    DateValue = b.batchdate,
+                                    batchtime = b.b012
                                 });
 
                     query = query.Where(c => c.DateValue >= fromDate && c.DateValue <= untilDate);
