@@ -77,10 +77,6 @@ namespace CardsREST
         List<CBalance> GetBalance(string numdoc);
 
         [OperationContract]
-        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "/getreport/{fromdate}/{untildate}/{numdoc}/{accounttype}/{trx}")]
-        List<CBatch> GetReport(string fromdate, string untildate, string numdoc = null, string accounttype = null, string trx = null);
-
-        [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "/addtransfer/{origennumdoc}/{destinonumdoc}/{monto}/{accounttype}/{sumausuario}")]
         Response AddTransfer(string origennumdoc, string destinonumdoc, string monto, string accounttype, string sumausuario);
 
