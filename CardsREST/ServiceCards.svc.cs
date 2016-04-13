@@ -38,9 +38,7 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
-            version.Add(new Record() { id = "1.1.4b", value = "2016-03-17 - Sprint 3" });
-            version.Add(new Record() { id = "1.1.4b", value = "2016-03-16 - Sprint 2" });
-            version.Add(new Record() { id = "1.1.4b", value = "2016-03-04 - Sprint 1" });
+            version.Add(new Record() { id = "1.1.4", value = "2016-04-06 - Release 1.1.4 - Sprint 4 : Desincorporar GetReport de la batería de servicios." });
             version.Add(new Record() { id = "1.1.3", value = "2016-02-25 - Release 1.1.3 - GetReport : Fix de linq con el rango de fechas." });
             version.Add(new Record() { id = "1.1.2", value = "2016-01-29 - Release 1.1.2 - GetBatch : Fix de linq con la condición -contains- por -equals- " });
             version.Add(new Record() { id = "1.1.1", value = "2016-01-14 - Release 1.1.1 - GetBalance : Fix de linq con la condición -contains- por -equals- " });

@@ -143,9 +143,9 @@
       <DependentUpon>CardsModel.edmx</DependentUpon>
       <LastGenOutput>CardsModel.cs</LastGenOutput>
     </Content>
-    <None Include="Properties\PublishProfiles\CardsWS.pubxml" />
     <None Include="Properties\PublishProfiles\1.DESARROLLO.pubxml" />
-    <None Include="Properties\PublishProfiles\2.PRODUCCIÓN.pubxml" />
+    <None Include="Properties\PublishProfiles\2.QA 172.20.3.18.pubxml" />
+    <None Include="Properties\PublishProfiles\3.PRODUCCIÓN.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
