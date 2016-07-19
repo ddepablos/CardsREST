@@ -39,17 +39,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.2\lib\net40\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.2\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -78,43 +82,172 @@
   <ItemGroup>
     <Compile Include="IServiceCards.cs" />
     <Compile Include="Model\Account.cs">
-      <DependentUpon>CardsModel.tt</DependentUpon>
+      <DependentUpon>CardsModelo.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\AccountsType.cs">
-      <DependentUpon>CardsModel.tt</DependentUpon>
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Accounts_History.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\active_sessions.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Bank.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Batch.cs">
-      <DependentUpon>CardsModel.tt</DependentUpon>
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Batch_History.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Bin.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Bins_MsgTypes.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Brand.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Card.cs">
-      <DependentUpon>CardsModel.tt</DependentUpon>
+      <DependentUpon>CardsModelo.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\CardsModel.Context.cs">
+    <Compile Include="Model\CardsCredit.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\CardsModelo.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CardsModel.Context.tt</DependentUpon>
+      <DependentUpon>CardsModelo.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\CardsModel.cs">
+    <Compile Include="Model\CardsModelo.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CardsModel.tt</DependentUpon>
+      <DependentUpon>CardsModelo.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\CardsModel.Designer.cs">
+    <Compile Include="Model\CardsModelo.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CardsModel.edmx</DependentUpon>
+      <DependentUpon>CardsModelo.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Cards_History.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\CBalance.cs" />
     <Compile Include="Model\CBatch.cs" />
     <Compile Include="Model\CClient.cs" />
+    <Compile Include="Model\ChargeType.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Client.cs">
-      <DependentUpon>CardsModel.tt</DependentUpon>
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ClientReclamo.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ClientsCredit.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Clients_History.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Corporation.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Corporations_History.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Corporation_Clients_History.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Corporation_Merchants.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\DetailRefuse.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\dtproperty.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\FileCharge.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Group.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\HistCardStatu.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\IssuerConfiguration.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Menu.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Merchant.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\MsgType.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\performance_log.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Plugin.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\PLZ_GETREPORT_Result.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\portal_role.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\portal_user.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\pwd_reminder.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Reclamo.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Record.cs" />
+    <Compile Include="Model\RespCode.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Response.cs" />
+    <Compile Include="Model\Resultado.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SecurityKey.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Sequence_numbers.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Status_Card.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Status_Reclamos.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Sucursal.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Transaccion.cs" />
     <Compile Include="Model\Transaction.cs">
-      <DependentUpon>CardsModel.tt</DependentUpon>
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\utility_values.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Wizard.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\WizardPlugin.cs">
+      <DependentUpon>CardsModelo.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceCards.svc.cs">
@@ -126,22 +259,22 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <EntityDeploy Include="Model\CardsModel.edmx">
+    <EntityDeploy Include="Model\CardsModelo.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>CardsModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>CardsModelo.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Model\CardsModel.Context.tt">
+    <Content Include="Model\CardsModelo.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CardsModel.edmx</DependentUpon>
-      <LastGenOutput>CardsModel.Context.cs</LastGenOutput>
+      <DependentUpon>CardsModelo.edmx</DependentUpon>
+      <LastGenOutput>CardsModelo.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Model\CardsModel.edmx.diagram">
-      <DependentUpon>CardsModel.edmx</DependentUpon>
+    <Content Include="Model\CardsModelo.edmx.diagram">
+      <DependentUpon>CardsModelo.edmx</DependentUpon>
     </Content>
-    <Content Include="Model\CardsModel.tt">
+    <Content Include="Model\CardsModelo.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>CardsModel.edmx</DependentUpon>
-      <LastGenOutput>CardsModel.cs</LastGenOutput>
+      <DependentUpon>CardsModelo.edmx</DependentUpon>
+      <LastGenOutput>CardsModelo.cs</LastGenOutput>
     </Content>
     <None Include="Properties\PublishProfiles\1.DESARROLLO.pubxml" />
     <None Include="Properties\PublishProfiles\2.QA 172.20.3.18.pubxml" />

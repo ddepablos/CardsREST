@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Objects;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
-using System.Text.RegularExpressions;
-
+using System.Data.Entity.Core.Objects;
 using CardsREST.Model;
+using System.Text.RegularExpressions;
 
 namespace CardsREST
 {
 
     public class ServiceCards : IServiceCards
     {
+
+        /* using System.Data.Entity.Core.Objects; */
 
         private string SERVICE_NAME = "CardsREST.";
 
@@ -38,6 +36,7 @@ namespace CardsREST
 
             List<Record> version = new List<Record>();
 
+            version.Add(new Record() { id = "1.1.5", value = "2016-04-28 - Sprint # 5 : GetBath : 661,761,861,961 + Upgrade : PLZ_ROLLBACK_BATCH, PLZ_ADD_BATCH, PLZ_TRANSFERENCIA_BATCH." });
             version.Add(new Record() { id = "1.1.4", value = "2016-04-06 - Release 1.1.4 - Sprint 4 : Desincorporar GetReport de la batería de servicios." });
             version.Add(new Record() { id = "1.1.3", value = "2016-02-25 - Release 1.1.3 - GetReport : Fix de linq con el rango de fechas." });
             version.Add(new Record() { id = "1.1.2", value = "2016-01-29 - Release 1.1.2 - GetBatch : Fix de linq con la condición -contains- por -equals- " });
@@ -112,29 +111,40 @@ namespace CardsREST
             string resDetail = "Excepción: ";
             string resSource = SERVICE_NAME + String.Format("AddBatch(string numdoc={0}, string transcode={1}, string monto={2}, string factoracred={3}, string factorcanje={4}, string sumausuario={5})", numdoc, transcode, monto, factoracred, factorcanje, sumausuario);
 
-            using (CardsEntities context = new CardsEntities())
+            try
             {
 
-                ObjectParameter respuesta = new ObjectParameter("response", typeof(int));
-
-                if (numdoc != null && monto != null && transcode != null && (factoracred != null || factorcanje != null))
+                using (CardsEntities context = new CardsEntities())
                 {
-                    if ( transcode.Equals("161"))
+
+                    ObjectParameter respuesta = new ObjectParameter("response", typeof(int));
+
+                    if (numdoc != null && monto != null && transcode != null && (factoracred != null || factorcanje != null))
                     {
-                        context.PLZ_ROLLBACK_BATCH(numdoc, int.Parse(monto), sumausuario, respuesta);
-                    }
-                    else
-                    {
-                        context.PLZ_ADD_BATCH1(numdoc, monto, int.Parse(transcode), decimal.Parse(factoracred), decimal.Parse(factorcanje), sumausuario, respuesta);
+                        if (transcode.Equals("161"))
+                        {
+                            context.PLZ_ROLLBACK_BATCH(numdoc, int.Parse(monto), sumausuario, respuesta);
+                        }
+                        else
+                        {
+                            context.PLZ_ADD_BATCH(numdoc, monto, int.Parse(transcode), decimal.Parse(factoracred), decimal.Parse(factorcanje), sumausuario, respuesta);
+                        }
+
+                        resCode = respuesta.Value.ToString();
                     }
 
-                    resCode = respuesta.Value.ToString();
+                    resDetail = getExcepcionDetail(resCode);
+
+                    return new Response() { excode = resCode, exdetail = resDetail, exsource = resSource };
+
                 }
 
-                resDetail = getExcepcionDetail(resCode);
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null) ex = ex.InnerException;
 
-                return new Response() { excode = resCode, exdetail = resDetail, exsource = resSource };
-
+                return new Response() { excode = "-1000", exdetail = ex.Message, exsource = resSource };
             }
 
         }
@@ -430,7 +440,8 @@ namespace CardsREST
          */
         private List<CBatch> GetBatchLealtad(string numdoc) {
 
-            int?[] lealtad = { 203, 204, 318, 319 };
+            int?[] lealtad = { 203, 204, 318, 319, 861, 961 };
+            //where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && lealtad.Contains(b.TransCode)
 
             using (CardsEntities context = new CardsEntities())
             {
@@ -439,7 +450,7 @@ namespace CardsREST
                              join b in context.Batches on tc.TransCode equals b.TransCode
                              join ca in context.Cards on b.b002 equals ca.PAN
                              join cl in context.Clients on ca.clientID equals cl.clientID
-                             where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && lealtad.Contains(b.TransCode)
+                             where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && (b.TransCode == 203 || b.TransCode == 204 || b.TransCode == 318 || b.TransCode == 319 || b.TransCode == 861 || b.TransCode == 961)
                              select new CBatch
                              {
                                  batchid = b.BatchID,
@@ -469,7 +480,7 @@ namespace CardsREST
         private List<CBatch> GetBatchPrepago(string numdoc)
         {
 
-            int?[] prepago = { 145, 200, 161, 201, 202 };
+            int?[] prepago = { 145, 200, 161, 201, 202, 661, 761 };
 
             using (CardsEntities context = new CardsEntities())
             {
@@ -478,7 +489,8 @@ namespace CardsREST
                              join b in context.Batches on tc.TransCode equals b.TransCode
                              join ca in context.Cards on b.b002 equals ca.PAN
                              join cl in context.Clients on ca.clientID equals cl.clientID
-                             where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && prepago.Contains(b.TransCode)
+                             //where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && prepago.Contains(b.TransCode)
+                             where context.Cards.Any(c => c.PAN == b.b002) && cl.CIDClient.Equals(numdoc) && (b.TransCode == 145 || b.TransCode == 200 || b.TransCode == 161 || b.TransCode == 201 || b.TransCode == 202 || b.TransCode == 661 || b.TransCode == 761)
                              select new CBatch
                              {
                                  batchid = b.BatchID,
@@ -604,21 +616,32 @@ namespace CardsREST
             string resDetail = "Excepción: ";
             string resSource = SERVICE_NAME + String.Format("AddTransfer(string origennumdoc={0}, string destinonumdoc={1}, string monto={2}, string accounttype={3}, string sumausuario={4})", origennumdoc, destinonumdoc, monto, accounttype, sumausuario);
 
-            using (CardsEntities context = new CardsEntities())
+            try
             {
 
-                ObjectParameter respuesta = new ObjectParameter("response", typeof(int));
-
-                if (origennumdoc != null && destinonumdoc != null && monto != null && accounttype != null && sumausuario != null)
+                using (CardsEntities context = new CardsEntities())
                 {
-                    context.PLZ_TRANSFERENCIA_BATCH(origennumdoc , destinonumdoc , monto , int.Parse(accounttype) , sumausuario, respuesta);
-                    resCode = respuesta.Value.ToString();
+
+                    ObjectParameter respuesta = new ObjectParameter("response", typeof(int));
+
+                    if (origennumdoc != null && destinonumdoc != null && monto != null && accounttype != null && sumausuario != null)
+                    {
+                        context.PLZ_TRANSFERENCIA_BATCH(origennumdoc, destinonumdoc, monto, int.Parse(accounttype), sumausuario, respuesta);
+                        resCode = respuesta.Value.ToString();
+                    }
+
+                    resDetail = getExcepcionDetail(resCode);
+
+                    return new Response() { excode = resCode, exdetail = resDetail, exsource = resSource };
+
                 }
 
-                resDetail = getExcepcionDetail(resCode);
+            }
+            catch (Exception ex)
+            {
+                while (ex.InnerException != null) ex = ex.InnerException;
 
-                return new Response() { excode = resCode, exdetail = resDetail, exsource = resSource };
-
+                return new Response() { excode = "-1000", exdetail = ex.Message, exsource = resSource };
             }
         
         }
